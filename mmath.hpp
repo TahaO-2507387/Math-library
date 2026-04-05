@@ -83,12 +83,14 @@ struct Vec2
 
     T angle() const
     {
-        return std::atan2(*this.y, *this.x);
+        return std::atan2(y, x);
     }
 
     auto distance(const Vec2<T> &other) const
     {
-        return std::sqrt(std::pow(other.x - x, 2) + std::pow(other.y - y, 2));
+        T dx = other.x - x;
+        T dy = other.y - y;
+        return std::sqrt(dx * dx + dy * dy);
     }
 
     bool operator==(const Vec2<T> &other) const
@@ -142,7 +144,7 @@ struct Vec3
 
     Vec3<T> operator-(const Vec3<T> &other) const
     {
-        Vec3<T> diff{x - ohter.x, y - other.y, z - other.z};
+        Vec3<T> diff{x - other.x, y - other.y, z - other.z};
         return diff;
     }
 
@@ -173,13 +175,18 @@ struct Vec3
     Vec3<T> crossproduct(const Vec3<T> &other) const
     {
         Vec3<T> cross{};
-        T n_x = (*this.y * other.z) - (*this.z * other.y);
-        T n_y = (*this.z * other.x) - (*this.x * other.z);
-        T n_z = (*this.x * other.y) - (*this.y * other.x);
+        T n_x = (y * other.z) - (z * other.y);
+        T n_y = (z * other.x) - (x * other.z);
+        T n_z = (x * other.y) - (y * other.x);
         cross.x = n_x;
         cross.y = n_y;
         cross.z = n_z;
         return cross;
+    }
+
+    T dotproduct(const Vec3<T> &other) const
+    {
+        return x * other.x + y * other.y + z * other.z;
     }
 
     T magnitudeSquared() const
@@ -187,7 +194,7 @@ struct Vec3
         return x * x + y * y + z * z;
     }
 
-    T magnitude() const
+    auto magnitude() const
     {
         return std::sqrt(this->magnitudeSquared());
     }
@@ -195,7 +202,7 @@ struct Vec3
     Vec3<T> normalize() const
     {
         Vec3<T> normalized{};
-        T magnitude = this->magnitude();
+        auto magnitude = this->magnitude();
         if (magnitude == 0)
         {
             return {0, 0, 0};
