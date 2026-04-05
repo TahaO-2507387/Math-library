@@ -224,4 +224,10 @@ struct Vec3
     }
 };
 
+template <ValidVecType T>
+struct Mat3
+{
+    T data[9]{};
+};
+
 #endif
